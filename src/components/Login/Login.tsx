@@ -1,8 +1,8 @@
 import React from "react";
-import { useParams } from "react-router-dom";
+// import { useParams } from "react-router-dom";
 
 const Login = () => {
-  const { token } = useParams();
+  // const { token } = useParams();
 
   return <h1>Login</h1>;
 };

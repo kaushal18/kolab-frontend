@@ -1,7 +1,8 @@
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import "./App.css";
-import ContentArea from "./components/ContentArea/ContentArea";
+import Main from "./components/Main";
 import Login from "./components/Login/Login";
+import GenerateToken from "./components/GenerateToken/GenerateToken";
 
 function App() {
   return (
@@ -11,7 +12,7 @@ function App() {
           <Login />
         </Route>
         <Route path="/:token">
-          <ContentArea />
+          <Main />
         </Route>
         <Route path="/">
           <GenerateToken />
