@@ -1,9 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, Dispatch, SetStateAction } from "react";
 import "./ContentArea.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import Button from "../common/Button";
 
-const ContentArea = () => {
+interface Props {
+  setDocument: Dispatch<SetStateAction<string>>;
+}
+
+const ContentArea: React.FC<Props> = ({ setDocument }) => {
   const [copyButtonText, setCopyButtonText] = useState<JSX.Element | string>(
     <i className="far fa-copy fa-lg"></i>
   );
@@ -53,7 +57,11 @@ const ContentArea = () => {
         </p>
       </div>
       <div className="contentArea">
-        <textarea name="content" id="content"></textarea>
+        <textarea
+          name="content"
+          id="content"
+          onChange={(e) => setDocument(e.target.value)}
+        ></textarea>
       </div>
     </div>
   );
