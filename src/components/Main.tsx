@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { io, Socket } from "socket.io-client";
 import ContentArea from "./ContentArea/ContentArea";
+import useDebounce from "../hooks/useDebounce";
 const ENDPOINT = "http://localhost:5000";
 
 // TODO - check if token is password protected
@@ -30,13 +31,16 @@ const Main = () => {
     });
   }, [socket]);
 
+  const debounceAndEmit = useDebounce((newLocalDocument, socket) => {
+    console.log(newLocalDocument);
+    socket?.emit("message", newLocalDocument);
+  }, 500);
+
   // emit current changes when localDocument modifies
   const handleDocumentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const newLocalDocument = e.target.value;
     setLocalDocument(newLocalDocument);
-    // TODO - debounce
-    console.log("emit", newLocalDocument);
-    socket?.emit("message", newLocalDocument);
+    debounceAndEmit(newLocalDocument, socket);
   };
 
   return (
