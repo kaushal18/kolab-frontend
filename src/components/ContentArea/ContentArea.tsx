@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./ContentArea.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import Button from "../common/Button";
@@ -12,6 +12,15 @@ const ContentArea: React.FC<Props> = ({ document, handleDocumentChange }) => {
   const [copyButtonText, setCopyButtonText] = useState<JSX.Element | string>(
     <i className="far fa-copy fa-lg"></i>
   );
+
+  useEffect(() => {
+    const timerId = setTimeout(() => {
+      setCopyButtonText(<i className="far fa-copy fa-lg"></i>);
+    }, 3000);
+    return () => {
+      clearTimeout(timerId);
+    };
+  }, [copyButtonText]);
 
   const copyToClipboardHandler = () => {
     const url = window.location.href;
