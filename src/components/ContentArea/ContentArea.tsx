@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
+import Button from "../common/Button";
 import "./ContentArea.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
-import Button from "../common/Button";
 
 interface Props {
   document: string;
