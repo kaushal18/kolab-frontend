@@ -17,7 +17,7 @@ const GenerateToken = () => {
     const token = generateRandomToken(
       parseInt(process.env.REACT_APP_PASTEBIN_TOKEN_LENGTH, 10)
     );
-    return <Redirect to={`/${token}`} />;
+    return <Redirect to={`/login/${token}`} />;
   }
 };
 

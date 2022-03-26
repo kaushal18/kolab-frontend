@@ -5,7 +5,6 @@ import ContentArea from "./ContentArea/ContentArea";
 import useDebounce from "../hooks/useDebounce";
 const ENDPOINT = "http://localhost:5000";
 
-// TODO - check if token is password protected
 const Main = () => {
   const { token } = useParams<{ token: string }>();
   const [localDocument, setLocalDocument] = useState<string>("");
