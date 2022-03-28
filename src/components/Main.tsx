@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { io, Socket } from "socket.io-client";
 import ContentArea from "./ContentArea/ContentArea";
 import useDebounce from "../hooks/useDebounce";
+import { RouteProps } from "react-router-dom";
 const BACKEND_ENDPOINT = "http://localhost:5000";
 
 interface Insert {
@@ -19,8 +20,10 @@ interface Operation {
   name: Insert | Delete;
 }
 
-const Main = () => {
-  const { token } = useParams<{ token: string }>();
+interface Props extends RouteProps {}
+
+const Main : React.FC<Props> = (props) => {
+  const { pathname: token }= useLocation();
   const [localDocument, setLocalDocument] = useState<string>("");
   const [isSyncWithServer, setIsSyncWithServer] = useState<Boolean>(true);
   const [pendingQueue, setPendingQueue] = useState<Operation[]>();
