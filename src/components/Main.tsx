@@ -5,9 +5,25 @@ import ContentArea from "./ContentArea/ContentArea";
 import useDebounce from "../hooks/useDebounce";
 const BACKEND_ENDPOINT = "http://localhost:5000";
 
+interface Insert {
+  position: number;
+  value: string;
+}
+
+interface Delete {
+  position: number;
+  length: number;
+}
+
+interface Operation {
+  name: Insert | Delete;
+}
+
 const Main = () => {
   const { token } = useParams<{ token: string }>();
   const [localDocument, setLocalDocument] = useState<string>("");
+  const [isSyncWithServer, setIsSyncWithServer] = useState<Boolean>(true);
+  const [pendingQueue, setPendingQueue] = useState<Operation[]>();
   const [socket, setSocket] = useState<Socket>();
 
   useEffect(() => {
@@ -36,6 +52,7 @@ const Main = () => {
   }, 500);
 
   // emit current changes when localDocument modifies
+  // TODO - capture the characters and add it in pending queue
   const handleDocumentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const newLocalDocument = e.target.value;
     setLocalDocument(newLocalDocument);
