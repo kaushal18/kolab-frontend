@@ -1,10 +1,21 @@
 import React from "react";
-// import { useParams } from "react-router-dom";
+import { useParams, useHistory, Redirect } from "react-router-dom";
 
-const Login = () => {
-  // const { token } = useParams();
+/**
+ * This component takes password for the token and authenticates
+ * upon sussesful auth it stores jwt for the specific token
+ */
 
-  return <h1>Login</h1>;
+interface Props {
+  token: string;
+}
+
+const Login : React.FC<Props> = () => {
+  const { token } = useParams<{ token: string }>();
+  let history = useHistory();
+  let isauthenticated : boolean = false;
+
+  return <Redirect to={`/${token}`} />;
 };
 
 export default Login;
