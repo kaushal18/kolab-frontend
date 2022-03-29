@@ -25,7 +25,6 @@ interface Props extends RouteProps {}
 const Main : React.FC<Props> = (props) => {
   let { pathname : token } = useLocation();
   token = token.substring(1);
-  console.log(token)
   const [localDocument, setLocalDocument] = useState<string>("");
   const [isSyncWithServer, setIsSyncWithServer] = useState<Boolean>(true);
   const [pendingQueue, setPendingQueue] = useState<Operation[]>();
