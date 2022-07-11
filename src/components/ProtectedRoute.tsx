@@ -6,8 +6,8 @@ interface Props extends RouteProps {}
 
 /**
  * checks if a valid jwt is present in cookies 
- * if not then the token is checked if its password protected
- * if none then no auth is present for token
+ * if not then the URL token is checked if its password protected
+ * if none of the above, then no auth is present for token
  */
 const ProtectedRoute : React.FC<Props> = ({ component, ...restOfProps}) => {
   const { token } = useParams<{ token: string }>();

@@ -26,14 +26,15 @@ const Main : React.FC<Props> = (props) => {
   let { pathname : token } = useLocation();
   token = token.substring(1);
   const [localDocument, setLocalDocument] = useState<string>("");
-  const [isSyncWithServer, setIsSyncWithServer] = useState<Boolean>(true);
-  const [pendingQueue, setPendingQueue] = useState<Operation[]>();
+  const [ackReceived, setAckReceived] = useState<Boolean>(true);
+  const [pendingQueue, setPendingQueue] = useState<Operation[]>(null);
+  const [sentChangeQueue, setSentChangeQueue] = useState<Operation[]>(null);
   const [socket, setSocket] = useState<Socket>();
 
   useEffect(() => {
     const socket = io(BACKEND_ENDPOINT, { query: { token: token } });
     socket.on("connect", () => {
-      console.log("connected", socket.id);
+      console.log("Connected to Socket", socket.id);
     });
     setSocket(socket);
     return () => {
@@ -50,17 +51,26 @@ const Main : React.FC<Props> = (props) => {
     });
   }, [socket]);
 
-  const debounceAndEmit = useDebounce((newLocalDocument, socket) => {
-    console.log(newLocalDocument);
-    socket?.emit("document", newLocalDocument);
-  }, 500);
+  const syncQueues = (newLocalDocument) => {
+    
+  }
 
   // emit current changes when localDocument modifies
   // TODO - capture the characters and add it in pending queue
   const handleDocumentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const newLocalDocument = e.target.value;
     setLocalDocument(newLocalDocument);
-    debounceAndEmit(newLocalDocument, socket);
+
+    // TODO - check if operation is insert / delete
+    console.log('event ' + e);
+
+    // if acknowledge has been recevied for last request then emit the request
+    // else add in pending queue
+    if(ackReceived) {
+      // TODO - pass the operation json in request
+      socket?.emit("document", newLocalDocument);
+      setAckReceived(false);
+    }
   };
 
   return (
