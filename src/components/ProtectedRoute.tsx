@@ -17,7 +17,7 @@ const ProtectedRoute : React.FC<Props> = ({ component, ...restOfProps}) => {
   return (
     <Route 
         { ...restOfProps }
-        render = {(props) => isPasswordProtected ? <Redirect to={`/login/${token}`}/> : <Main {...props} />}
+        render = {(props) => isPasswordProtected ? <Redirect to={`/login/${token}`}/> : <Main />}
     />
   );
 };
