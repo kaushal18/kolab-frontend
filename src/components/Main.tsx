@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import { io, Socket } from "socket.io-client";
 import ContentArea from "./ContentArea/ContentArea";
@@ -27,9 +27,10 @@ const Main : React.FC<Props> = (props) => {
   token = token.substring(1);
   const [localDocument, setLocalDocument] = useState<string>("");
   const [ackReceived, setAckReceived] = useState<Boolean>(true);
-  const [pendingQueue, setPendingQueue] = useState<Operation[]>(null);
-  const [sentChangeQueue, setSentChangeQueue] = useState<Operation[]>(null);
+  const [pendingQueue, setPendingQueue] = useState<Operation[]>();
+  const [sentChangeQueue, setSentChangeQueue] = useState<Operation[]>();
   const [socket, setSocket] = useState<Socket>();
+  const textareaRef = useRef(null);
 
   useEffect(() => {
     const socket = io(BACKEND_ENDPOINT, { query: { token: token } });
@@ -51,10 +52,6 @@ const Main : React.FC<Props> = (props) => {
     });
   }, [socket]);
 
-  const syncQueues = (newLocalDocument) => {
-    
-  }
-
   // emit current changes when localDocument modifies
   // TODO - capture the characters and add it in pending queue
   const handleDocumentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -62,7 +59,7 @@ const Main : React.FC<Props> = (props) => {
     setLocalDocument(newLocalDocument);
 
     // TODO - check if operation is insert / delete
-    console.log('event ' + e);
+    console.log(e);
 
     // if acknowledge has been recevied for last request then emit the request
     // else add in pending queue
@@ -73,10 +70,20 @@ const Main : React.FC<Props> = (props) => {
     }
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    console.log(e);
+    console.log(textareaRef);    
+    if(e.key === 'Backspace' || e.key === 'Delete') {
+      console.log("delete operation");
+    }
+  };
+
   return (
     <ContentArea
+      textareaRef={textareaRef}
       document={localDocument}
       handleDocumentChange={handleDocumentChange}
+      handleKeyDown={handleKeyDown}
     />
   );
 };
