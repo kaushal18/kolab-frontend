@@ -3,15 +3,8 @@ import Button from "../common/Button";
 import "./ContentArea.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 
-interface Props {
-  textareaRef: React.LegacyRef<HTMLTextAreaElement> | undefined;
-  document: string;
-  handleDocumentChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
-  handleKeyDown: (e: React.KeyboardEvent<HTMLTextAreaElement>) => void;
-}
-
-const ContentArea: React.FC<Props> = ({ textareaRef, document, handleDocumentChange, handleKeyDown }) => {
-  const [copyButtonText, setCopyButtonText] = useState<JSX.Element | string>(
+const ContentArea = ({ textareaRef, document, handleDocumentChange, handleKeyDown }) => {
+  const [copyButtonText, setCopyButtonText] = useState(
     <i className="far fa-copy fa-lg"></i>
   );
 

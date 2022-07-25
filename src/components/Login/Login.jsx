@@ -6,14 +6,10 @@ import { useParams, useHistory, Redirect } from "react-router-dom";
  * upon sussesful auth it stores jwt for the specific token
  */
 
-interface Props {
-  token: string;
-}
-
-const Login : React.FC<Props> = () => {
-  const { token } = useParams<{ token: string }>();
+const Login = () => {
+  const { token } = useParams();
   let history = useHistory();
-  let isauthenticated : boolean = false;
+  let isauthenticated = false;
 
   return <Redirect to={`/${token}`} />;
 };

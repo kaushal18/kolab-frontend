@@ -2,34 +2,16 @@ import React, { useEffect, useState, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import { io, Socket } from "socket.io-client";
 import ContentArea from "./ContentArea/ContentArea";
-import useDebounce from "../hooks/useDebounce";
-import { RouteProps } from "react-router-dom";
 const BACKEND_ENDPOINT = "http://localhost:5000";
 
-interface Insert {
-  position: number;
-  value: string;
-}
-
-interface Delete {
-  position: number;
-  length: number;
-}
-
-interface Operation {
-  name: Insert | Delete;
-}
-
-interface Props extends RouteProps {}
-
-const Main : React.FC<Props> = (props) => {
+const Main = (props) => {
   let { pathname : token } = useLocation();
   token = token.substring(1);
-  const [localDocument, setLocalDocument] = useState<string>("");
-  const [ackReceived, setAckReceived] = useState<Boolean>(true);
-  const [pendingQueue, setPendingQueue] = useState<Operation[]>();
-  const [sentChangeQueue, setSentChangeQueue] = useState<Operation[]>();
-  const [socket, setSocket] = useState<Socket>();
+  const [localDocument, setLocalDocument] = useState("");
+  const [ackReceived, setAckReceived] = useState(true);
+  const [pendingQueue, setPendingQueue] = useState();
+  const [sentChangeQueue, setSentChangeQueue] = useState();
+  const [socket, setSocket] = useState();
   const textareaRef = useRef(null);
 
   useEffect(() => {
@@ -54,7 +36,7 @@ const Main : React.FC<Props> = (props) => {
 
   // emit current changes when localDocument modifies
   // TODO - capture the characters and add it in pending queue
-  const handleDocumentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+  const handleDocumentChange = (e) => {
     const newLocalDocument = e.target.value;
     setLocalDocument(newLocalDocument);
 
@@ -70,7 +52,7 @@ const Main : React.FC<Props> = (props) => {
     }
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+  const handleKeyDown = (e) => {
     console.log(e);
     console.log(textareaRef);    
     if(e.key === 'Backspace' || e.key === 'Delete') {

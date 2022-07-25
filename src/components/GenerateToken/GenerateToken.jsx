@@ -1,6 +1,6 @@
 import { Redirect } from "react-router-dom";
 
-function generateRandomToken(tokenLength: number) {
+function generateRandomToken(tokenLength) {
   let result = "";
   const characters = "abcdefghijklmopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-+";
   const charactersLength = characters.length;
