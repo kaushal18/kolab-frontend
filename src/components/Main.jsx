@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import { io, Socket } from "socket.io-client";
 import ContentArea from "./ContentArea/ContentArea";
-const BACKEND_ENDPOINT = "http://localhost:5000";
+const BACKEND_ENDPOINT = "http://localhost:5001";
 
 const Main = (props) => {
   let { pathname : token } = useLocation();
@@ -45,11 +45,11 @@ const Main = (props) => {
 
     // if acknowledge has been recevied for last request then emit the request
     // else add in pending queue
-    if(ackReceived) {
+    // if(ackReceived) {
       // TODO - pass the operation json in request
       socket?.emit("document", newLocalDocument);
-      setAckReceived(false);
-    }
+    //   setAckReceived(false);
+    // }
   };
 
   const handleKeyDown = (e) => {
