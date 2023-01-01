@@ -1,15 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Button from "../common/Button";
 import "./ContentArea.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 
-interface Props {
-  document: string;
-  handleDocumentChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
-}
-
-const ContentArea: React.FC<Props> = ({ document, handleDocumentChange }) => {
-  const [copyButtonText, setCopyButtonText] = useState<JSX.Element | string>(
+const ContentArea = ({ textareaRef, document, handleDocumentChange, handleKeyDown }) => {
+  const [copyButtonText, setCopyButtonText] = useState(
     <i className="far fa-copy fa-lg"></i>
   );
 
@@ -71,7 +66,9 @@ const ContentArea: React.FC<Props> = ({ document, handleDocumentChange }) => {
           name="content"
           id="content"
           value={document}
+          ref={textareaRef}
           onChange={(e) => handleDocumentChange(e)}
+          onKeyDown={(e) => handleKeyDown(e)}
         ></textarea>
       </div>
     </div>

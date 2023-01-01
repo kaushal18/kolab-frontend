@@ -1,13 +1,6 @@
 import React from "react";
 
-interface Props {
-  abbrTitle?: string;
-  className?: string;
-  onClickHandler?: () => void;
-  value?: JSX.Element | string;
-}
-
-const Button: React.FC<Props> = ({
+const Button = ({
   abbrTitle,
   className,
   onClickHandler,

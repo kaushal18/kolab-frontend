@@ -7,8 +7,8 @@ import { useCallback, useState } from "react";
  */
 
 export default function useDebounce(
-  func: (...args: any[]) => void,
-  delay: number
+  func,
+  delay
 ) {
   const [id, setId] = useState<NodeJS.Timeout | null>(null);
 
