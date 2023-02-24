@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import { io } from "socket.io-client";
 import ContentArea from "./ContentArea/ContentArea";
-const BACKEND_ENDPOINT = "https://kolab-backend.onrender.com";
+const BACKEND_ENDPOINT = process.env.REACT_APP_BACKEND_URL;
 
 const Main = () => {
   let { pathname : token } = useLocation();
