@@ -1,16 +1,16 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useLocation } from "react-router-dom";
-import { io, Socket } from "socket.io-client";
+import { io } from "socket.io-client";
 import ContentArea from "./ContentArea/ContentArea";
-const BACKEND_ENDPOINT = "http://localhost:5001";
+const BACKEND_ENDPOINT = "https://kolab-backend.onrender.com";
 
-const Main = (props) => {
+const Main = () => {
   let { pathname : token } = useLocation();
   token = token.substring(1);
   const [localDocument, setLocalDocument] = useState("");
-  const [ackReceived, setAckReceived] = useState(true);
-  const [pendingQueue, setPendingQueue] = useState();
-  const [sentChangeQueue, setSentChangeQueue] = useState();
+  // const [ackReceived, setAckReceived] = useState(true);
+  // const [pendingQueue, setPendingQueue] = useState();
+  // const [sentChangeQueue, setSentChangeQueue] = useState();
   const [socket, setSocket] = useState();
   const textareaRef = useRef(null);
 
@@ -41,7 +41,7 @@ const Main = (props) => {
     setLocalDocument(newLocalDocument);
 
     // TODO - check if operation is insert / delete
-    console.log(e);
+    // console.log(e);
 
     // if acknowledge has been recevied for last request then emit the request
     // else add in pending queue
@@ -53,10 +53,10 @@ const Main = (props) => {
   };
 
   const handleKeyDown = (e) => {
-    console.log(e);
-    console.log(textareaRef);    
+    // console.log(e);
+    // console.log(textareaRef);    
     if(e.key === 'Backspace' || e.key === 'Delete') {
-      console.log("delete operation");
+      // console.log("delete operation");
     }
   };
 

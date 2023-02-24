@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, useParams, RouteProps, Redirect } from "react-router-dom";
+import { Route, useParams, Redirect } from "react-router-dom";
 import Main from "./Main";
 
 /**
@@ -10,7 +10,7 @@ import Main from "./Main";
 const ProtectedRoute = ({ component, ...restOfProps}) => {
   const { token } = useParams();
 	let isPasswordProtected = false;
-	let isJwtValid = true;
+	// let isJwtValid = true;
 
   return (
     <Route 

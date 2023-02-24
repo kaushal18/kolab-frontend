@@ -10,7 +10,7 @@ export default function useDebounce(
   func,
   delay
 ) {
-  const [id, setId] = useState<NodeJS.Timeout | null>(null);
+  const [id, setId] = useState(null);
 
   return useCallback(
     (...args) => {

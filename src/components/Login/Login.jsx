@@ -1,5 +1,5 @@
 import React from "react";
-import { useParams, useHistory, Redirect } from "react-router-dom";
+import { useParams, Redirect } from "react-router-dom";
 
 /**
  * This component takes password for the token and authenticates
@@ -8,8 +8,8 @@ import { useParams, useHistory, Redirect } from "react-router-dom";
 
 const Login = () => {
   const { token } = useParams();
-  let history = useHistory();
-  let isauthenticated = false;
+  // let history = useHistory();
+  // let isauthenticated = false;
 
   return <Redirect to={`/${token}`} />;
 };
