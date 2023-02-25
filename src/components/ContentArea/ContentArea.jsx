@@ -20,8 +20,8 @@ const ContentArea = ({ textareaRef, document, handleDocumentChange, handleKeyDow
   const copyToClipboardHandler = () => {
     const url = window.location.href;
     navigator.clipboard.writeText(url).then(
-      () => setCopyButtonText("copied"),
-      () => alert("error, please copy the link from browser url bar")
+      () => setCopyButtonText("copied !"),
+      () => alert("Error, please copy the link from browser url bar")
     );
   };
 
@@ -30,31 +30,60 @@ const ContentArea = ({ textareaRef, document, handleDocumentChange, handleKeyDow
       window.location.protocol + "//" + window.location.host;
   };
 
+  const changeUrl = () => {
+    const newToken = prompt("Warning! This will transfer all your data to new a URL. Please enter the new URL to proceed.");
+    // Make a POST call to the backend
+    if (newToken === null) return;
+    if (newToken.trim() === "") return alert("URL cannot be empty");
+
+    const payload = {
+      oldToken: window.location.pathname.substring(1),
+      newToken: newToken.trim(),
+    };
+
+    fetch(`${process.env.REACT_APP_BACKEND_URL}/api/migrate`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    })
+    .then((response) => {
+    
+      if (response.status === 200) {
+        window.location.href = `${window.location.protocol}//${window.location.host}/${newToken}`;
+      } else if (response.status === 409) {
+        alert("URL already exists");
+        // console.log(response.body);
+      }
+    })
+    .catch((error) => console.error(error));
+  };
+
   return (
     <div className="main">
       <div className="top">
         <p className="titleText">
-          Share with just a link 👉
           <Button
-            abbrTitle="copy link to clipboard"
-            className="button copyLink"
+            abbrTitle="Copy Link To Clipboard"
+            className="button copyLink tooltip"
             onClickHandler={copyToClipboardHandler}
             value={copyButtonText}
           />
           <Button
-            abbrTitle="change url"
+            abbrTitle="Change Url"
             className="button"
-            onClickHandler={undefined}
+            onClickHandler={changeUrl}
             value={<i className="fas fa-pencil-alt fa-lg"></i>}
           />
           <Button
-            abbrTitle="add password"
+            abbrTitle="Add Password"
             className="button"
             onClickHandler={undefined}
             value={<i className="fas fa-lock fa-lg"></i>}
           />
           <Button
-            abbrTitle="generate new random url"
+            abbrTitle="Generate New Random Url"
             className="button"
             onClickHandler={generateUrlHandler}
             value={<i className="fas fa-plus fa-lg"></i>}

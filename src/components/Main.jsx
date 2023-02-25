@@ -28,7 +28,7 @@ const Main = () => {
   // listen for incomming messages
   useEffect(() => {
     socket?.on("document", (message) => {
-      console.log("incomming", message);
+      console.log("incomming data -", message);
       // TODO - resolve conflicts
       setLocalDocument(message);
     });

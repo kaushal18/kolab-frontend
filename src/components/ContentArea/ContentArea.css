@@ -3,9 +3,9 @@
   outline: none;
   cursor: pointer;
   font-family: inherit;
-  background: rgb(128, 128, 255);
+  background: rgb(49, 49, 49);
   color: white;
-  padding: 10px 20px 10px 20px;
+  padding: 12px 35px 12px 35px;
   margin-left: 10px;
   border-radius: 10px;
 }

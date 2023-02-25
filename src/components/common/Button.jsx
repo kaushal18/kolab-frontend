@@ -1,4 +1,5 @@
 import React from "react";
+import ToolTip from "@mui/material/Tooltip";
 
 const Button = ({
   abbrTitle,
@@ -7,11 +8,11 @@ const Button = ({
   value,
 }) => {
   return (
-    <abbr title={abbrTitle}>
+    <ToolTip title={<span style={{ fontSize: "small"}}>{abbrTitle}</span>} arrow>
       <button className={className} onClick={onClickHandler}>
         {value}
       </button>
-    </abbr>
+    </ToolTip>
   );
 };
 

@@ -7,6 +7,7 @@ import { useParams, Redirect } from "react-router-dom";
  */
 
 const Login = () => {
+  // Fetch the token from URL
   const { token } = useParams();
   // let history = useHistory();
   // let isauthenticated = false;
