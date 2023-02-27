@@ -1,5 +1,5 @@
 import React from "react";
-import { useParams, Redirect } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 
 /**
  * This component takes password for the token and authenticates
@@ -7,12 +7,9 @@ import { useParams, Redirect } from "react-router-dom";
  */
 
 const Login = () => {
-  // Fetch the token from URL
-  const { token } = useParams();
-  // let history = useHistory();
-  // let isauthenticated = false;
 
-  return <Redirect to={`/${token}`} />;
+  // return <Redirect to={`/${token}`} />;
+  return <h1>Login</h1>
 };
 
 export default Login;

@@ -48,8 +48,8 @@ const ContentArea = ({ textareaRef, document, handleDocumentChange, handleKeyDow
       },
       body: JSON.stringify(payload),
     })
+    .then((response) => response.json())
     .then((response) => {
-    
       if (response.status === 200) {
         window.location.href = `${window.location.protocol}//${window.location.host}/${newToken}`;
       } else if (response.status === 409) {
