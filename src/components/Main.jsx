@@ -1,21 +1,17 @@
-import React, { useEffect, useState, useRef } from "react";
-import { useLocation } from "react-router-dom";
+import React, { useEffect, useState, useRef, useContext } from "react";
 import { io } from "socket.io-client";
 import ContentArea from "./ContentArea/ContentArea";
-const BACKEND_ENDPOINT = process.env.REACT_APP_BACKEND_URL;
+import AuthContext from "../context/AuthProvider";
 
 const Main = () => {
-  let { pathname : token } = useLocation();
-  token = token.substring(1);
+  const { auth, setAuth } = useContext(AuthContext);
+  const token = auth.token;
   const [localDocument, setLocalDocument] = useState("");
-  // const [ackReceived, setAckReceived] = useState(true);
-  // const [pendingQueue, setPendingQueue] = useState();
-  // const [sentChangeQueue, setSentChangeQueue] = useState();
   const [socket, setSocket] = useState();
   const textareaRef = useRef(null);
 
   useEffect(() => {
-    const socket = io(BACKEND_ENDPOINT, { query: { token: token } });
+    const socket = io(process.env.REACT_APP_BACKEND_URL, { query: { token } });
     socket.on("connect", () => {
       console.log("Connected to Socket", socket.id);
     });

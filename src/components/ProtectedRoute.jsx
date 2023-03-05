@@ -1,22 +1,31 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Route, Redirect } from "react-router-dom";
 import Main from "./Main";
+import AuthContext from "../context/AuthProvider";
 
-const verifyJwt = () => {
-  // mock jwt retrieval
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      resolve(true);
-    }, 3000);
-  });
+const verifyJwt = (auth) => {
+  // check if access token is present and valid
+  if(auth.accessToken) {
+    return true;
+  }
+  else {
+    return false;
+  }
 }
 
 const verifyPassword = (token) => {
-  // make API call to check if token is password protected
-  // fetch(`${process.env.REACT_APP_BACKEND_URL}/api/auth?token=${token}`)
+  // // return a promise
+  // // make API call to check if token is password protected
+  // fetch(`${process.env.REACT_APP_BACKEND_URL}/api/auth/${token}`)
   // .then((response) => response.json())
   // .then(response => {
+  //   console.log(response);
+  //   // HTTP:200 -> not protected
   //   if(response.status === 200) {
+  //     return false;
+  //   }
+  //    // HTTP:401 -> protected
+  //   else if(response.status === 401) {
   //     return true;
   //   }
   //   else if(response.status === 500) {
@@ -43,17 +52,20 @@ const verifyPassword = (token) => {
  */
 const ProtectedRoute = ({ component, ...restOfProps}) => {
   const [token, setToken] = useState(() => window.location.pathname.substring(1));
+  const { auth, setAuth } = useContext(AuthContext);
   const [isPasswordProtected, setIsPasswordProtected] = useState(true);
   const [isJwtValid, setIsJwtValid] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    setAuth(others => ({ ...others, token }));
     setLoading(true);
     // set state to fetching, show a spinner on screen
     // check if jwt is present and valid
-    verifyJwt(token)
+    
+    verifyJwt(auth)
       .then(response => {
-        console.log("respons from jwt", response);
+        console.log("response from jwt", response);
         if(response) {
           setIsJwtValid(true);
           setLoading(false);
@@ -64,6 +76,7 @@ const ProtectedRoute = ({ component, ...restOfProps}) => {
         if(!response) {
           verifyPassword(token)
             .then(response => {
+              console.log("response from password", response);
               setIsPasswordProtected(response);
               setLoading(false);
             });
