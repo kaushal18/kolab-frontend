@@ -1,70 +1,100 @@
-# Getting Started with Create React App
+# Kolab - A realtime shareable editor
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Kolab is an editor that generates a unique link that can be viewed and edited by multiple people at the same time. Save time in team collaborations by just jotting down what you are thinking and sharing a real-time link with others.
 
-## Available Scripts
+[Here](https://github.com/kaushal18/kolab-backend) is the backend implementation.
 
-In the project directory, you can run:
+## Motivation
 
-### `npm start`
+There we many occasions in a team project in my undergraduation where we wanted to access and edit some information quickly which serves a single source of truth about the project. To access this information without going through the hassle of logging into Google account on shared university computer and then sending the document I decided to built this.
 
-Runs the app in the development mode.\
+## How to run locally
+
+First clone the repository into the local machine.\
+Then, set the evironment variable `REACT_APP_BACKEND_URL` using following command -
+```bash
+$ export REACT_APP_BACKEND_URL=https://kolab-backend.onrender.com
+```
+
+Replace the `REACT_APP_BACKEND_URL` with your localhost url if you want to connect with the local backend. \
+Now run the app using following commands - 
+
+```bash
+$ npm install
+$ npm start
+```
+
+This runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
+To deploy your version of app run -
+```bash
+$ npm run build
+```
+This builds the app for production to the `build` folder.\
+It correctly bundles React in production mode and optimizes the build for the best performance. \
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `npm run eject`
+## Features
+- Unique and custom URL for your document.
+- Real-time sync across all the clients accessing the link.
+- Migrate your document to a custom URL.
+- Add security with password protection to protect from losing data.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+## Frameworks & Languages
+- React.js - Front-end framework for building the UI
+- Socket.io - Websocket implementation that enabled bi-directional communication between client and server.
+- Json Web Tokens - Authentication and authorization.
+- MaterialUI - For UI components.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## High Level Design
+![Kolab Architecture](https://user-images.githubusercontent.com/32773584/222995627-662531d7-8049-4753-b6b8-e64aeb34fade.png)
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+Token in the diagram refers to the unique url assigned to the document. Eg - `https://kolab-frontend.onrender.com/8-8sme7_KK`, here the unique token is `8-8sme7_KK`.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+Each client is connected with the backend server using a websocket this helps to send information in both the directions. \
+Clients accesing the same document are placed in a 'room'. When we receive an update request to the document by any of the client the server broadcasts the updates to all other clients in the 'room'.
 
-## Learn More
+## How is URL uniqueness guarenteed
+Before loading the document the front-end generates an URL with a length of 10. Randomly 10 characters are chosen from [a-z] [A-z] [0-9] [+,-,_]. Although, collisions can happen, i.e. we can end up randomly choosing an url which already exists. But the chances of such a case is very low, as there can be 65<sup>10</sup> (1.3 quintillion!) combinations. This number further increases exponentially as users can choose a url with an arbitary length.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Future Work
+Operational Transformation - A conflict resolution algorithm to maintain synchronization among the clients editing the same document. The algorithm carriers out some transformations to the received message from server before merging it into the document.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Each client maintains the following information:
+- Last synced revision (id)
+- All local changes which have not been sent to the server (Pending changes) - queue
+- All local changes sent to the server but have not been acknowledged (Sent changes)
+- Current document state visible to the user
 
-### Code Splitting
+The server maintains the following information:
+- List of all received but have not been processed changes (Pending changes)
+- Log of all processed changes (Revision log)
+- State of the document on the time of last processed change
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+OPERATIONS \
+INSERT(position p, character c) - Insert c at position p\
+DELETE(position p, length L) Delete from position p, p+L
 
-### Analyzing the Bundle Size
+Character only cases\
+Cases when transformation will be required - (left one is the local change and right is the server change)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+Insert(pos1, char1) , Insert(pos2, char2)
+1. If pos1 < pos2: Insert(pos2+1, char2) shift one
+2. If pos1 > pos2: Insert(pos2, char2) no transform
+3. If pos1 == pos2: Insert(pos2, char2) give preference to server, no transform
 
-### Making a Progressive Web App
+Ins(p1, l1) , del(p2, c2)
+1. If p1 < p2: del(p2+1, l2)
+2. If p1 > p2: del(p2, l2)
+3. If p1 == p2: del(p2, l2)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+del(p1, l1), ins(p2, c2)
+1. If p1 < p2: ins(p2-1, c2)
+2. If p1 > p2: ins(p2, c2)
+3. If p1 == p2: ins(p2, c2)
 
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+del(p1, l1), del(p2, l2)
+1. If p1 < p2: del(p2-1, l2)
+2. If p1 > p2: del(p2, l2)
+3. If p1 == p2: del(p2, l2)
