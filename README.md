@@ -2,6 +2,8 @@
 
 Kolab is an editor that generates a unique link that can be viewed and edited by multiple people at the same time. Save time in team collaborations by just jotting down what you are thinking and sharing a real-time link with others.
 
+[Here](https://github.com/kaushal18/kolab-backend) is the backend implementation.
+
 ## Motivation
 
 There we many occasions in a team project in my undergraduation where we wanted to access and edit some information quickly which serves a single source of truth about the project. To access this information without going through the hassle of logging into Google account on shared university computer and then sending the document I decided to built this.
