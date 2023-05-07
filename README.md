@@ -67,7 +67,7 @@ things quite simple and fast since we will not be worrying about duplications or
 
 ## Client and Server Connection
 A TCP/IP connection has a Time To Live (TTL) value after which the connection is closed and it does not support sending requests other way around, i.e. from server to the client. Using this TCP/IP protocol the clients would have to regularly poll the server to check if there are any updates. This would be very inefficient and lead to multiple expensive network calls. \
-A better alternative are Server Sent Events (SSE) and Web Sockets. In this case Web Sockets are perfect choice as we require full-duplex connection between client and server. The client should be able to send request when there are edits in the document and the server should be able to broadcase these changes all other clients which are listening.
+A better alternative are Server Sent Events (SSE) and Web Sockets. In this case Web Sockets are perfect choice as we require full-duplex connection between client and server. The client should be able to send request when there are edits in the document and the server to broadcast these changes to all other clients which are listening.
 
 ## How Authentication is handled
 I have used Json Web Tokens (JWT) to handle authentication. If the user decides to protect the docuement with a password, after doing so the backend responds with an access token and refresh token both of which are signed with a shared private key (symmectric encryption). The access token has a short expiry time and is always maintained in the memory of frontend. 
