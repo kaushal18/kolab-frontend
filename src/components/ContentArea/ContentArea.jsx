@@ -4,6 +4,7 @@ import "./ContentArea.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 
 const ContentArea = ({ textareaRef, document, handleDocumentChange, handleKeyDown }) => {
+  // state for managing the copy button animation
   const [copyButtonText, setCopyButtonText] = useState(
     <i className="far fa-copy fa-lg"></i>
   );
@@ -30,6 +31,7 @@ const ContentArea = ({ textareaRef, document, handleDocumentChange, handleKeyDow
       window.location.protocol + "//" + window.location.host;
   };
 
+  // migrate to a new user provided custom URL
   const changeUrl = () => {
     const newToken = prompt("Warning! This will transfer all your data to new a URL. Please enter the new URL to proceed.");
     // Make a POST call to the backend
@@ -60,6 +62,35 @@ const ContentArea = ({ textareaRef, document, handleDocumentChange, handleKeyDow
     .catch((error) => console.error(error));
   };
 
+  const addPassword = () => {
+    const password = prompt("Enter your password");
+    // Make a POST call to the backend
+    if (password === null) return;
+    if (password.trim() === "") return alert("URL cannot be empty");
+
+    const payload = {
+      token: window.location.pathname.substring(1),
+      password: password
+    }
+
+    fetch(`${process.env.REACT_APP_BACKEND_URL}/api/register`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    })
+    .then((response) => {
+      if (response.status === 200) {
+        alert("Password changed successfully");
+      } else {
+        alert("Error while changing password, please try again later");
+        // console.log(response.body);
+      }
+    })
+    .catch((error) => console.error(error));
+  }
+
   return (
     <div className="main">
       <div className="top">
@@ -79,7 +110,7 @@ const ContentArea = ({ textareaRef, document, handleDocumentChange, handleKeyDow
           <Button
             abbrTitle="Add Password"
             className="button"
-            onClickHandler={undefined}
+            onClickHandler={addPassword}
             value={<i className="fas fa-lock fa-lg"></i>}
           />
           <Button

@@ -13,6 +13,7 @@ const Main = () => {
   const textareaRef = useRef(null);
   const debouncedDoc = useDebounce(localDocument, 500);
 
+  // initiate a socket connection
   useEffect(() => {
     const socket = io(BACKEND_ENDPOINT, { query: { token: token } });
     socket.on("connect", () => {
@@ -32,19 +33,17 @@ const Main = () => {
     });
   }, [socket]);
 
+  // Emit the changes after debouncing
   useEffect(() => {
     socket?.emit("document", debouncedDoc);
   }, [debouncedDoc, socket]);
 
-  // emit current changes when localDocument modifies
+  // modify state as document changes
   const handleDocumentChange = (e) => {
-    const newLocalDocument = e.target.value;
-    setLocalDocument(newLocalDocument);
+    setLocalDocument(e.target.value);
   };
 
-  const handleKeyDown = (e) => {  
-
-  };
+  const handleKeyDown = (e) => {  };
 
   return (
     <ContentArea

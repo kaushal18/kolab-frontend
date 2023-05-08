@@ -12,7 +12,7 @@ function generateRandomToken(tokenLength) {
 
 const GenerateToken = () => {
   const token = generateRandomToken(10);
-  return <Redirect to={`/login/${token}`} />;
+  return <Redirect to={`/${token}`} />;
 };
 
 export default GenerateToken;
