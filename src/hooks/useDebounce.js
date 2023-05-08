@@ -1,26 +1,20 @@
-import { useCallback, useState } from "react";
+import { useEffect, useState } from "react";
 
-/**
- * Debounce a function by time
- * @param {Function} func
- * @param {Number} delay
- */
-
-export default function useDebounce(
-  func,
-  delay
-) {
-  const [id, setId] = useState(null);
-
-  return useCallback(
-    (...args) => {
-      id && clearTimeout(id);
-      setId(
-        setTimeout(() => {
-          func(...args);
-        }, delay)
-      );
+export default function useDebounce(value, delay) {
+  const [debouncedValue, setDebouncedValue] = useState(value);
+  useEffect(
+    () => {
+      // Update debounced value after delay
+      const handler = setTimeout(() => {
+        setDebouncedValue(value);
+      }, delay);
+      // If value changes within delay milli sec, 
+      // useEffect will re-run leading to clearing the previous timeout
+      return () => {
+        clearTimeout(handler);
+      };
     },
-    [func, delay, id]
+    [value, delay]
   );
+  return debouncedValue;
 }

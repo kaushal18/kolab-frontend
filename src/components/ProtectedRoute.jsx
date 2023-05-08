@@ -12,6 +12,15 @@ const ProtectedRoute = ({ component, ...restOfProps}) => {
 	let isPasswordProtected = false;
 	// let isJwtValid = true;
 
+  const xhr = new XMLHttpRequest();
+  xhr.open('GET', `${process.env.REACT_APP_BACKEND_URL}/api/verify/${token}`, false); // false indicates a synchronous request
+  xhr.send();
+
+  console.log("status", xhr.status);
+
+  if (xhr.status === 401) {
+    isPasswordProtected = true;
+  } 
   return (
     <Route 
         { ...restOfProps }

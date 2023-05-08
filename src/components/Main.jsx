@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import { io } from "socket.io-client";
+import useDebounce from "../hooks/useDebounce";
 import ContentArea from "./ContentArea/ContentArea";
 const BACKEND_ENDPOINT = process.env.REACT_APP_BACKEND_URL;
 
@@ -8,11 +9,9 @@ const Main = () => {
   let { pathname : token } = useLocation();
   token = token.substring(1);
   const [localDocument, setLocalDocument] = useState("");
-  // const [ackReceived, setAckReceived] = useState(true);
-  // const [pendingQueue, setPendingQueue] = useState();
-  // const [sentChangeQueue, setSentChangeQueue] = useState();
   const [socket, setSocket] = useState();
   const textareaRef = useRef(null);
+  const debouncedDoc = useDebounce(localDocument, 500);
 
   useEffect(() => {
     const socket = io(BACKEND_ENDPOINT, { query: { token: token } });
@@ -29,35 +28,22 @@ const Main = () => {
   useEffect(() => {
     socket?.on("document", (message) => {
       console.log("incomming data -", message);
-      // TODO - resolve conflicts
       setLocalDocument(message);
     });
   }, [socket]);
 
+  useEffect(() => {
+    socket?.emit("document", debouncedDoc);
+  }, [debouncedDoc, socket]);
+
   // emit current changes when localDocument modifies
-  // TODO - capture the characters and add it in pending queue
   const handleDocumentChange = (e) => {
     const newLocalDocument = e.target.value;
     setLocalDocument(newLocalDocument);
-
-    // TODO - check if operation is insert / delete
-    // console.log(e);
-
-    // if acknowledge has been recevied for last request then emit the request
-    // else add in pending queue
-    // if(ackReceived) {
-      // TODO - pass the operation json in request
-      socket?.emit("document", newLocalDocument);
-    //   setAckReceived(false);
-    // }
   };
 
-  const handleKeyDown = (e) => {
-    // console.log(e);
-    // console.log(textareaRef);    
-    if(e.key === 'Backspace' || e.key === 'Delete') {
-      // console.log("delete operation");
-    }
+  const handleKeyDown = (e) => {  
+
   };
 
   return (
